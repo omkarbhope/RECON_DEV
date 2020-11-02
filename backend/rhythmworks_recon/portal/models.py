@@ -619,6 +619,18 @@ class tbl_employee_mst(models.Model):
     sub_application_id = models.CharField(max_length=20,verbose_name="Sub-Application ID")
     application_id = models.CharField(max_length=20,verbose_name="Application ID")
 
+class tbl_workflow_activity_mst(models.Model):
+    activity_name = models.CharField(max_length=15,verbose_name='Activity name')
+    activity_description = models.CharField(max_length=15,verbose_name='Activity Description')
+    is_active = models.CharField(default='Y',max_length=1,verbose_name='Is Active')
+    is_deleted = models.CharField(max_length=1, default='N',verbose_name="Is Deleted")
+    created_date_time = models.DateTimeField(default=timezone.localtime,verbose_name="Created Date Time")
+    created_by = models.IntegerField(default=0,verbose_name="Created By")
+    updated_date_time = models.DateTimeField(default=timezone.localtime,verbose_name="Updated Date Time")
+    updated_by = models.IntegerField(default=0,verbose_name="Updated By")
+    sub_application_id = models.CharField(max_length=20,verbose_name="Sub-Application ID")
+    application_id = models.CharField(max_length=20,verbose_name="Application ID")
+
 class test(models.Model):
     share_id=models.IntegerField(default=0,verbose_name="Share Id")
 

@@ -18,6 +18,7 @@ router.register(r'reconmst', views.tbl_reconcilation_definition_mst_view)
 router.register(r'recondet', views.tbl_reconcilation_definition_details_view)
 router.register(r'uom', views.UOMViewSet)
 router.register(r'employee', views.EmployeeViewSet)
+router.register(r'activity', views.ActivityViewSet)
 router.register(r'role', views.RoleViewSet)
 
 urlpatterns = [

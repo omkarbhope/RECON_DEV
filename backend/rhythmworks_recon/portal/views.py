@@ -78,6 +78,10 @@ class EmployeeViewSet(viewsets.ModelViewSet):
     serializer_class = EmployeeSerializer
     queryset = tbl_employee_mst.objects.all()
 
+class ActivityViewSet(viewsets.ModelViewSet):
+    serializer_class = ActivitySerializer
+    queryset = tbl_workflow_activity_mst.objects.all()
+
 class RoleViewSet(viewsets.ModelViewSet):
     serializer_class = RoleSerializer
     queryset = Tbl_Role_Mst.objects.all()

@@ -14,4 +14,5 @@ admin.site.register(tbl_company_mst)
 admin.site.register(tbl_master)
 admin.site.register(Tbl_Uom_Mst)
 admin.site.register(tbl_employee_mst)
+admin.site.register(tbl_workflow_activity_mst)
 

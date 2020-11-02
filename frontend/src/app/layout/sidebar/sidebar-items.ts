@@ -1,7 +1,24 @@
 import { RouteInfo } from './sidebar.metadata';
 
 export const ROUTES: RouteInfo[] = [
-  {
+    {
+        path: '', title: 'Workflow', icon: 'menu-icon ti-layout', class: 'menu-toggle', groupTitle: false,
+        submenu: [
+            {
+                path: '', title: 'Master', icon: '', class: 'ml-sub-menu', groupTitle: false, submenu: [
+                    { path: '/workflow/activity', title: 'Activity', icon: '', class: '', groupTitle: false, submenu: [] },
+                ]
+            },
+            {
+              path: '/', title: 'Transaction', icon: '', class: 'ml-sub-menu', groupTitle: false, submenu: [
+                { path: '/', title: 'Transaction 1', icon: '', class: '', groupTitle: false, submenu: [] },
+                { path: '/', title: 'Transaction 2', icon: '', class: '', groupTitle: false, submenu: [] }
+    
+              ]
+            }
+        ] 
+    },
+    {
     path: '', title: 'Common Setup', icon: 'menu-icon ti-layout', class: 'menu-toggle', groupTitle: false,
     submenu: [
         {

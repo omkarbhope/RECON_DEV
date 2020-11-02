@@ -49,6 +49,7 @@ import {
   NgxMatTimepickerModule
 } from '@angular-material-components/datetime-picker';
 import { AuthService, AuthInterceptor, AuthGuard } from './services/authentication.service';
+import { WorkflowRoutingModule } from './workflow/workflow-routing.module';
 
 
 
@@ -99,7 +100,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     NgxMaskModule.forRoot(),
     AgmCoreModule.forRoot({
       apiKey: 'YOUR API KEY'
-    })
+    }),
+    WorkflowRoutingModule
   ],
   providers: [
     { provide: LocationStrategy, useClass: HashLocationStrategy },

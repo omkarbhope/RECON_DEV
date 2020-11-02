@@ -19,6 +19,11 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: 'workflow',
+    loadChildren: () => import('./workflow/workflow.module').then(m => m.WorkflowModule),
+    canActivate: [AuthGuard]
+  },
+  {
     path: 'company-setup',
     loadChildren: () => import('./company-setup/company-setup.module').then(m => m.CompanySetupModule),
     canActivate: [AuthGuard]

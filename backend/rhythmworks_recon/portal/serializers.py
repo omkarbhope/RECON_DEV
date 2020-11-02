@@ -140,3 +140,9 @@ class EmployeeSerializer(serializers.ModelSerializer):
     class Meta:
         model = tbl_employee_mst
         fields = ('__all__')
+
+class ActivitySerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False)
+    class Meta:
+        model = tbl_workflow_activity_mst
+        fields = ('__all__')
