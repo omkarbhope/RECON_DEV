@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivityComponent } from './activity/activity.component';
-import { WorkflowRoutingModule } from './workflow-routing.module';
+import { ManageSecurityRoutingModule } from './manage-security-routing.module';
+import { LeftPanelComponent } from './left-panel/left-panel.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatBadgeModule } from '@angular/material/badge';
@@ -38,18 +38,19 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTreeModule } from '@angular/material/tree';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { NgxMaskModule } from 'ngx-mask';
 import { MaterialFileInputModule } from 'ngx-material-file-input';
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-import { LevelComponent } from './level/level.component';
+
+
 
 
 @NgModule({
-  declarations: [ActivityComponent, LevelComponent],
+  declarations: [LeftPanelComponent],
   imports: [
     CommonModule,
-    WorkflowRoutingModule,
+    ManageSecurityRoutingModule,
     FormsModule,
     MatSlideToggleModule,
     MatButtonToggleModule,
@@ -95,4 +96,4 @@ import { LevelComponent } from './level/level.component';
     NgxDatatableModule
   ]
 })
-export class WorkflowModule { }
+export class ManageSecurityModule { }

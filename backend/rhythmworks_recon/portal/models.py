@@ -19,7 +19,7 @@ class tbl_login_mst(models.Model):
     updated_date_time = models.DateTimeField(default=timezone.localtime,verbose_name="Updated Date Time")
     updated_by = models.IntegerField(default=0,verbose_name="Updated By")
     sub_application_id = models.CharField(max_length=20,verbose_name="Sub-Application ID")
-    application_id = models.CharField(max_length=20,verbose_name="Application ID")    
+    application_id = models.CharField(max_length=20,verbose_name="Application ID")  
 
 class Tbl_Role_Mst(models.Model):
     role_name = models.CharField(max_length=30,verbose_name='Role Name')
@@ -154,7 +154,13 @@ class tbl_company_mst(models.Model):
         print(last_object)
         self.company_id = last_object.id+1
         self.entity_share_id = self.company_shortname+"-"+str(last_object.id+1)
+        if self.share_id == "-1":
+            self.share_id = self.entity_share_id
+        else:
+            print(self.share_id,type(self.share_id))
+            self.share_id = tbl_company_mst.objects.filter(pk=int(self.share_id)).values('entity_share_id').first()['entity_share_id']
         super().save(*arg, **kwargs)
+
 
 class Tbl_Daily_Currency_Rate_Mst(models.Model):
     share_id =  models.IntegerField(default=0,verbose_name='Share ID')
@@ -382,15 +388,31 @@ class tbl_source_details(models.Model):
     sub_application_id = models.CharField(max_length=20,verbose_name="Sub-Application ID")
     application_id = models.CharField(max_length=20,verbose_name="Application ID")
 
+class tbl_sourcetable_fields_mst(models.Model):
+    section_identifier =models.CharField(max_length=20,verbose_name='Section Identifier ID')
+    field_name = models.CharField(max_length=40,verbose_name="Field Name")
+    field_data_type_ref_id = models.ForeignKey("tbl_master", default=0,verbose_name="Field Data Type ID",on_delete=models.PROTECT)
+    field_length = models.IntegerField(verbose_name='Field Length')
+    is_key_field = models.BooleanField(default=False,verbose_name='Is Key Field')
+    is_primary_field = models.BooleanField(default=False,verbose_name='Is Primary Field')
+    is_active = models.CharField(default='Y',max_length=1,verbose_name='Is Active')
+    is_deleted = models.CharField(max_length=1, default='N',verbose_name="Is Deleted")
+    created_date_time = models.DateTimeField(default=timezone.localtime,verbose_name="Created Date Time")
+    created_by = models.IntegerField(default=0,verbose_name="Created By")
+    updated_date_time = models.DateTimeField(default=timezone.localtime,verbose_name="Updated Date Time")
+    updated_by = models.IntegerField(default=0,verbose_name="Updated By")
+    sub_application_id = models.CharField(max_length=20,verbose_name="Sub-Application ID")
+    application_id = models.CharField(max_length=20,verbose_name="Application ID")    
+
 class tbl_reconcilation_definition_mst(models.Model):
     share_id = models.IntegerField(default=0,verbose_name='Share ID')
     company_ref_id = models.ForeignKey("tbl_company_mst", default=0, verbose_name="Company Ref Id", on_delete=models.PROTECT)
-    name = models.CharField(max_length=20,verbose_name='Reconcilation Name')
+    name = models.CharField(max_length=40,verbose_name='Reconcilation Name')
     recon_type_ref_id = models.ForeignKey("tbl_master", default=0,verbose_name="Recon Type Ref ID",on_delete=models.PROTECT)
     source_name1_ref_id = models.ForeignKey("tbl_source_mst", default=0,verbose_name="Source Name 1 Ref ID",on_delete=models.PROTECT,related_name='source_name1')
     source_name2_ref_id = models.ForeignKey("tbl_source_mst", default=0,verbose_name="Source Name 2 Ref ID",on_delete=models.PROTECT,related_name='source_name2')
-    source_name3_ref_id = models.ForeignKey("tbl_source_mst", default=0,verbose_name="Source Name 3 Ref ID",on_delete=models.PROTECT,related_name='source_name3')
-    source_name4_ref_id = models.ForeignKey("tbl_source_mst", default=0,verbose_name="Source Name 4 Ref ID",on_delete=models.PROTECT,related_name='source_name4')
+    source_name3_ref_id = models.ForeignKey("tbl_source_mst", default=0,verbose_name="Source Name 3 Ref ID",on_delete=models.PROTECT,related_name='source_name3',null=True,blank=True)
+    source_name4_ref_id = models.ForeignKey("tbl_source_mst", default=0,verbose_name="Source Name 4 Ref ID",on_delete=models.PROTECT,related_name='source_name4',null=True,blank=True)
     recon_rule = models.TextField(verbose_name='Recon Rule')
     probable_match_rule = models.TextField(verbose_name='Probable Match Rule')
     is_active = models.CharField(default='Y',max_length=1,verbose_name='Is Active')
@@ -405,22 +427,22 @@ class tbl_reconcilation_definition_mst(models.Model):
 class tbl_reconcilation_definition_details(models.Model):
     header_ref_id = models.ForeignKey("tbl_reconcilation_definition_mst", default=0,verbose_name="Header Ref ID",on_delete=models.PROTECT,related_name='initialItemRow')
     details_id = models.IntegerField(default=0,verbose_name='Details Id')
-    source_name_1_ref_id = models.ForeignKey("tbl_source_mst", default=0,verbose_name="Source Name 1 Ref ID",on_delete=models.PROTECT,related_name='details_source_name1')
-    source_name_1_field_name = models.CharField(max_length=20, default=0,verbose_name='Source Name 1 Field Name')
-    source_name_1_field_id = models.CharField(max_length=20, default=0,verbose_name='Source Name 1 Field Name ID')
-    source_name_1_section_identifier_id = models.IntegerField(default=0,verbose_name='Source Name 1 Section Identifier ID')
-    source_name_2_ref_id = models.ForeignKey("tbl_source_mst", default=0,verbose_name="Source Name 2 Ref ID",on_delete=models.PROTECT,related_name='details_source_name2')
-    source_name_2_field_name = models.CharField(max_length=20, default=0,verbose_name='Source Name 2 Field Name')
-    source_name_2_field_id = models.CharField(max_length=20, default=0,verbose_name='Source Name 2 Field Name ID')
-    source_name_2_section_identifier_id = models.IntegerField(default=0,verbose_name='Source Name 2 Section Identifier ID')
-    source_name_3_ref_id = models.ForeignKey("tbl_source_mst", default=0,verbose_name="Source Name 3 Ref ID",on_delete=models.PROTECT,related_name='details_source_name3')
-    source_name_3_field_name = models.CharField(max_length=20, default=0,verbose_name='Source Name 3 Field Name')
-    source_name_3_field_id = models.CharField(max_length=20, default=0,verbose_name='Source Name 3 Field Name ID')
-    source_name_3_section_identifier_id = models.IntegerField(default=0,verbose_name='Source Name 3 Section Identifier ID')
-    source_name_4_ref_id = models.ForeignKey("tbl_source_mst", default=0,verbose_name="Source Name 4 Ref ID",on_delete=models.PROTECT,related_name='details_source_name4')
-    source_name_4_field_name = models.CharField(max_length=20, default=0,verbose_name='Source Name 4 Field Name')
-    source_name_4_field_id = models.CharField(max_length=20, default=0,verbose_name='Source Name 4 Field Name ID')
-    source_name_4_section_identifier_id = models.IntegerField(default=0,verbose_name='Source Name 4 Section Identifier ID')
+    source_name_1_ref_id = models.ForeignKey("tbl_source_mst", default=0,verbose_name="Source Name 1 Ref ID",on_delete=models.PROTECT,related_name='details_source_name1',null=True,blank=True)
+    source_name_1_field_name = models.CharField(max_length=20, default=0,verbose_name='Source Name 1 Field Name',null=True,blank=True)
+    source_name_1_field_id = models.CharField(max_length=20, default=0,verbose_name='Source Name 1 Field Name ID',null=True,blank=True)
+    source_name_1_section_identifier_id = models.IntegerField(default=0,verbose_name='Source Name 1 Section Identifier ID',null=True,blank=True)
+    source_name_2_ref_id = models.ForeignKey("tbl_source_mst", default=0,verbose_name="Source Name 2 Ref ID",on_delete=models.PROTECT,related_name='details_source_name2',null=True,blank=True)
+    source_name_2_field_name = models.CharField(max_length=20, default=0,verbose_name='Source Name 2 Field Name',null=True,blank=True)
+    source_name_2_field_id = models.CharField(max_length=20, default=0,verbose_name='Source Name 2 Field Name ID',null=True,blank=True)
+    source_name_2_section_identifier_id = models.IntegerField(default=0,verbose_name='Source Name 2 Section Identifier ID',null=True,blank=True)
+    source_name_3_ref_id = models.ForeignKey("tbl_source_mst", default=0,verbose_name="Source Name 3 Ref ID",on_delete=models.PROTECT,related_name='details_source_name3',null=True,blank=True)
+    source_name_3_field_name = models.CharField(max_length=20, default=0,verbose_name='Source Name 3 Field Name',null=True,blank=True)
+    source_name_3_field_id = models.CharField(max_length=20, default=0,verbose_name='Source Name 3 Field Name ID',null=True,blank=True)
+    source_name_3_section_identifier_id = models.IntegerField(default=0,verbose_name='Source Name 3 Section Identifier ID',null=True,blank=True)
+    source_name_4_ref_id = models.ForeignKey("tbl_source_mst", default=0,verbose_name="Source Name 4 Ref ID",on_delete=models.PROTECT,related_name='details_source_name4',null=True,blank=True)
+    source_name_4_field_name = models.CharField(max_length=20, default=0,verbose_name='Source Name 4 Field Name',null=True,blank=True)
+    source_name_4_field_id = models.CharField(max_length=20, default=0,verbose_name='Source Name 4 Field Name ID',null=True,blank=True)
+    source_name_4_section_identifier_id = models.IntegerField(default=0,verbose_name='Source Name 4 Section Identifier ID',null=True,blank=True)
     probable_match_flag = models.CharField(default='N',max_length=1,verbose_name='Probable Match Flag')
     is_active = models.CharField(default='Y',max_length=1,verbose_name='Is Active')
     is_deleted = models.CharField(max_length=1, default='N',verbose_name="Is Deleted")
@@ -429,7 +451,7 @@ class tbl_reconcilation_definition_details(models.Model):
     updated_date_time = models.DateTimeField(default=timezone.localtime,verbose_name="Updated Date Time")
     updated_by = models.IntegerField(default=0,verbose_name="Updated By")
     sub_application_id = models.CharField(max_length=20,verbose_name="Sub-Application ID")
-    application_id = models.CharField(max_length=20,verbose_name="Application ID")           
+    application_id = models.CharField(max_length=20,verbose_name="Application ID")       
 
 class tbl_api_definition_standard_mst(models.Model):
     share_id = models.IntegerField(default=0,verbose_name='Share ID')
@@ -527,7 +549,7 @@ class tbl_reconcilation_process_mst(models.Model):
     application_id = models.CharField(max_length=20,verbose_name="Application ID")  
 
 class tbl_reconcilation_process_details(models.Model):
-    header_ref_id = models.ForeignKey("tbl_reconcilation_process_mst", default=0,verbose_name="Header Ref ID",on_delete=models.PROTECT)
+    header_ref_id = models.ForeignKey("tbl_reconcilation_process_mst", default=0,verbose_name="Header Ref ID",on_delete=models.PROTECT,related_name='initialItemRow')
     operation_ref_id =  models.ForeignKey("tbl_master", default=0,verbose_name="Operation Ref ID",on_delete=models.PROTECT)
     source_name_ref_id = models.ForeignKey("tbl_source_mst", default=0,verbose_name="Source Name Ref ID",on_delete=models.PROTECT)
     api_ref_id = models.ForeignKey("tbl_api_definition_mst", default=0,verbose_name="API Ref ID",on_delete=models.PROTECT)
@@ -543,8 +565,8 @@ class tbl_reconcilation_process_details(models.Model):
 
 class tbl_schedule_process_mst(models.Model):
     share_id = models.IntegerField(default=0,verbose_name='Share ID')
-    process_ref_id = models.IntegerField(default=0,verbose_name='Process Ref ID')
-    frequncy_ref_id = models.IntegerField(default=0,verbose_name='Frequency Ref ID')
+    process_ref_id =  models.ForeignKey("tbl_reconcilation_process_mst", default=0,verbose_name="Process Ref ID",on_delete=models.PROTECT)
+    frequency_ref_id = models.ForeignKey("tbl_master", default=0,verbose_name="Frequency Ref ID",on_delete=models.PROTECT)
     start_time = models.DateTimeField(default=timezone.localtime,verbose_name="Start Time")
     planned_execution_ref_id =models.IntegerField(default=0,verbose_name='Planned Execution Ref Id')
     is_active = models.CharField(default='Y',max_length=1,verbose_name='Is Active')
@@ -619,6 +641,18 @@ class tbl_employee_mst(models.Model):
     sub_application_id = models.CharField(max_length=20,verbose_name="Sub-Application ID")
     application_id = models.CharField(max_length=20,verbose_name="Application ID")
 
+class tbl_workflow_mst(models.Model):
+    workflow_name = models.CharField(max_length=15,verbose_name='Workflow name')
+    workflow_description = models.CharField(max_length=15,verbose_name='Workflow Description')
+    is_active = models.CharField(default='Y',max_length=1,verbose_name='Is Active')
+    is_deleted = models.CharField(max_length=1, default='N',verbose_name="Is Deleted")
+    created_date_time = models.DateTimeField(default=timezone.localtime,verbose_name="Created Date Time")
+    created_by = models.IntegerField(default=0,verbose_name="Created By")
+    updated_date_time = models.DateTimeField(default=timezone.localtime,verbose_name="Updated Date Time")
+    updated_by = models.IntegerField(default=0,verbose_name="Updated By")
+    sub_application_id = models.CharField(max_length=20,verbose_name="Sub-Application ID")
+    application_id = models.CharField(max_length=20,verbose_name="Application ID")
+
 class tbl_workflow_activity_mst(models.Model):
     activity_name = models.CharField(max_length=15,verbose_name='Activity name')
     activity_description = models.CharField(max_length=15,verbose_name='Activity Description')
@@ -631,8 +665,101 @@ class tbl_workflow_activity_mst(models.Model):
     sub_application_id = models.CharField(max_length=20,verbose_name="Sub-Application ID")
     application_id = models.CharField(max_length=20,verbose_name="Application ID")
 
+class tbl_workflow_action_mst(models.Model):
+    action_name = models.CharField(max_length=15,verbose_name='Action name')
+    action_description = models.CharField(max_length=15,verbose_name='Action Description')
+    is_active = models.CharField(default='Y',max_length=1,verbose_name='Is Active')
+    is_deleted = models.CharField(max_length=1, default='N',verbose_name="Is Deleted")
+    created_date_time = models.DateTimeField(default=timezone.localtime,verbose_name="Created Date Time")
+    created_by = models.IntegerField(default=0,verbose_name="Created By")
+    updated_date_time = models.DateTimeField(default=timezone.localtime,verbose_name="Updated Date Time")
+    updated_by = models.IntegerField(default=0,verbose_name="Updated By")
+    sub_application_id = models.CharField(max_length=20,verbose_name="Sub-Application ID")
+    application_id = models.CharField(max_length=20,verbose_name="Application ID")    
+
 class test(models.Model):
     share_id=models.IntegerField(default=0,verbose_name="Share Id")
 
 class test1(models.Model):
     share_id=models.IntegerField(default=0,verbose_name="Share Id")
+
+class tbl_left_panel(models.Model):
+    share_id = models.IntegerField(default=0,verbose_name='Share ID')
+    form_name = models.CharField(max_length=30,verbose_name='Form Name')
+    form_link = models.CharField(max_length=200,default=0,verbose_name='Form Link')
+    is_parent = models.CharField(default='N',max_length=1,verbose_name='Is Parent')
+    is_child = models.CharField(default='N',max_length=1,verbose_name='Is Child')
+    is_sub_child = models.CharField(default='N',max_length=1,verbose_name='Is Sub Child')
+    parent_code = models.CharField(max_length=30,verbose_name='Parent Code')
+    child_code = models.CharField(max_length=30,verbose_name='Child Code')
+    sub_child_code = models.CharField(max_length=30,verbose_name='Sub Child Code')
+    icon_class = models.CharField(max_length=30,verbose_name='Icon Class')
+    sequence_id = models.IntegerField(default=0,verbose_name="Sequence ID")
+    is_active = models.CharField(default='Y',max_length=1,verbose_name='Is Active')
+    is_deleted = models.CharField(max_length=1, default='N',verbose_name="Is Deleted")
+    created_date_time = models.DateTimeField(default=timezone.localtime,verbose_name="Created Date Time")
+    created_by = models.IntegerField(default=0,verbose_name="Created By")
+    updated_date_time = models.DateTimeField(default=timezone.localtime,verbose_name="Updated Date Time")
+    updated_by = models.IntegerField(default=0,verbose_name="Updated By")
+    sub_application_id = models.CharField(max_length=20,verbose_name="Sub-Application ID")
+    application_id = models.CharField(max_length=20,verbose_name="Application ID")
+ 
+class tbl_assign_pages_roles(models.Model):
+    share_id = models.IntegerField(default=0,verbose_name='Share ID')
+    assigned_to_role = models.IntegerField(default=0,verbose_name="Assigned To Role")
+    form_ref_id = models.ForeignKey("tbl_left_panel", default=0, verbose_name="Form Ref Id", on_delete=models.PROTECT)
+    parent_code = models.CharField(max_length=30,verbose_name='Parent Code')
+    child_code = models.CharField(max_length=30,verbose_name='Child Code')
+    sub_child_code = models.CharField(max_length=30,verbose_name='Sub Child Code')
+    read_access = models.CharField(default='N',max_length=1,verbose_name='Read Access')
+    write_edit_access = models.CharField(default='N',max_length=1,verbose_name='Write Edit Access')
+    delete_access = models.CharField(default='N',max_length=1,verbose_name='Delete Access')
+    delete_access = models.CharField(default='N',max_length=1,verbose_name='Read Access')
+    is_active = models.CharField(default='Y',max_length=1,verbose_name='Is Active')
+    is_deleted = models.CharField(max_length=1, default='N',verbose_name="Is Deleted")
+    created_date_time = models.DateTimeField(default=timezone.localtime,verbose_name="Created Date Time")
+    created_by = models.IntegerField(default=0,verbose_name="Created By")
+    updated_date_time = models.DateTimeField(default=timezone.localtime,verbose_name="Updated Date Time")
+    updated_by = models.IntegerField(default=0,verbose_name="Updated By")
+    sub_application_id = models.CharField(max_length=20,verbose_name="Sub-Application ID")
+    application_id = models.CharField(max_length=20,verbose_name="Application ID")
+
+class tbl_assign_role_user(models.Model):
+    share_id = models.IntegerField(default=0,verbose_name='Share ID')
+    assigned_to_user = models.CharField(max_length=30,verbose_name='Assigned To User')
+    assigned_to_role_ref_id = models.ForeignKey("Tbl_Role_Mst", default=0, verbose_name="Assigned to Role Ref Id", on_delete=models.PROTECT)
+    is_active = models.CharField(default='Y',max_length=1,verbose_name='Is Active')
+    is_deleted = models.CharField(max_length=1, default='N',verbose_name="Is Deleted")
+    created_date_time = models.DateTimeField(default=timezone.localtime,verbose_name="Created Date Time")
+    created_by = models.IntegerField(default=0,verbose_name="Created By")
+    updated_date_time = models.DateTimeField(default=timezone.localtime,verbose_name="Updated Date Time")
+    updated_by = models.IntegerField(default=0,verbose_name="Updated By")
+    sub_application_id = models.CharField(max_length=20,verbose_name="Sub-Application ID")
+    application_id = models.CharField(max_length=20,verbose_name="Application ID") 
+
+class tbl_workflow_level_data_mst(models.Model):
+    share_id = models.IntegerField(default=0,verbose_name='Share ID')
+    level = models.IntegerField(default=0,verbose_name='Level')
+    is_active = models.CharField(default='Y',max_length=1,verbose_name='Is Active')
+    is_deleted = models.CharField(max_length=1, default='N',verbose_name="Is Deleted")
+    created_date_time = models.DateTimeField(default=timezone.localtime,verbose_name="Created Date Time")
+    created_by = models.IntegerField(default=0,verbose_name="Created By")
+    updated_date_time = models.DateTimeField(default=timezone.localtime,verbose_name="Updated Date Time")
+    updated_by = models.IntegerField(default=0,verbose_name="Updated By")
+    sub_application_id = models.CharField(max_length=20,verbose_name="Sub-Application ID")
+    application_id = models.CharField(max_length=20,verbose_name="Application ID")
+
+class tbl_workflow_level_data_details(models.Model):
+    header_ref_id = models.ForeignKey("tbl_workflow_level_data_mst", default=0,verbose_name="Header Ref ID",on_delete=models.CASCADE,related_name='initialItemRow')
+    activity_ref_id = models.ForeignKey("tbl_workflow_activity_mst", default=0, verbose_name="Activity Ref Id", on_delete=models.PROTECT)
+    sequence_number = models.IntegerField(default=0,verbose_name="Sequence Number")
+    action_ref_id =  models.ForeignKey("tbl_workflow_action_mst", default=0, verbose_name="Action Ref Id", on_delete=models.PROTECT)
+    next_sequence_number = models.IntegerField(default=0,verbose_name="Next Sequence Number")
+    is_active = models.CharField(default='Y',max_length=1,verbose_name='Is Active')
+    is_deleted = models.CharField(max_length=1, default='N',verbose_name="Is Deleted")
+    created_date_time = models.DateTimeField(default=timezone.localtime,verbose_name="Created Date Time")
+    created_by = models.IntegerField(default=0,verbose_name="Created By")
+    updated_date_time = models.DateTimeField(default=timezone.localtime,verbose_name="Updated Date Time")
+    updated_by = models.IntegerField(default=0,verbose_name="Updated By")
+    sub_application_id = models.CharField(max_length=20,verbose_name="Sub-Application ID")
+    application_id = models.CharField(max_length=20,verbose_name="Application ID")             

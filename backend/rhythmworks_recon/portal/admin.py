@@ -15,4 +15,7 @@ admin.site.register(tbl_master)
 admin.site.register(Tbl_Uom_Mst)
 admin.site.register(tbl_employee_mst)
 admin.site.register(tbl_workflow_activity_mst)
-
+admin.site.register(tbl_left_panel)
+admin.site.register(tbl_workflow_level_data_mst)
+admin.site.register(tbl_workflow_level_data_details)
+admin.site.register(tbl_workflow_action_mst)

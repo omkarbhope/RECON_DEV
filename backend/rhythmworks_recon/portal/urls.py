@@ -20,6 +20,10 @@ router.register(r'uom', views.UOMViewSet)
 router.register(r'employee', views.EmployeeViewSet)
 router.register(r'activity', views.ActivityViewSet)
 router.register(r'role', views.RoleViewSet)
+router.register(r'left-panel', views.LeftPanelViewSet)
+router.register(r'level', views.LevelViewSet)
+router.register(r'level-details', views.LevelDetailsViewSet)
+router.register(r'action', views.ActionViewSet)
 
 urlpatterns = [
     path('auth/code/', obtain_code_token),

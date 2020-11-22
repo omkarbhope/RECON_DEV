@@ -82,6 +82,23 @@ class ActivityViewSet(viewsets.ModelViewSet):
     serializer_class = ActivitySerializer
     queryset = tbl_workflow_activity_mst.objects.all()
 
+class LeftPanelViewSet(viewsets.ModelViewSet):
+    serializer_class = LeftPanelSerializer
+    queryset = tbl_left_panel.objects.all()
+
 class RoleViewSet(viewsets.ModelViewSet):
     serializer_class = RoleSerializer
     queryset = Tbl_Role_Mst.objects.all()
+
+class LevelViewSet(viewsets.ModelViewSet):
+    serializer_class = LevelSerializer
+    queryset = tbl_workflow_level_data_mst.objects.all()
+
+class LevelDetailsViewSet(viewsets.ModelViewSet):
+    serializer_class = LevelDetailsSerializer
+    queryset = tbl_workflow_level_data_details.objects.all()
+
+class ActionViewSet(viewsets.ModelViewSet):
+    serializer_class = ActionSerializer
+    queryset = tbl_workflow_action_mst.objects.all()
+
