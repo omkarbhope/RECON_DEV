@@ -43,10 +43,11 @@ import { NgxMaskModule } from 'ngx-mask';
 import { MaterialFileInputModule } from 'ngx-material-file-input';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { LevelComponent } from './level/level.component';
+import { WorkflowComponent } from './workflow/workflow.component';
 
 
 @NgModule({
-  declarations: [ActivityComponent, LevelComponent],
+  declarations: [ActivityComponent, LevelComponent, WorkflowComponent],
   imports: [
     CommonModule,
     WorkflowRoutingModule,

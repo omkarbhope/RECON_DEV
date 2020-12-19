@@ -230,3 +230,9 @@ class ActionSerializer(serializers.ModelSerializer):
     class Meta:
         model = tbl_workflow_action_mst
         fields = ('__all__')
+
+class WorkflowSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False)
+    class Meta:
+        model = tbl_workflow_mst
+        fields = ('__all__')

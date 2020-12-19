@@ -1,55 +1,47 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ReconcilationService } from 'src/app/services/reconcilation.service';
-import { CommonSetupService } from 'src/app/services/common-setup.service';
+import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
-import { DynamicScriptLoaderService } from './../../services/dynamic-script-loader.service';
-import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { CommonSetupService } from 'src/app/services/common-setup.service';
+import { DynamicScriptLoaderService } from 'src/app/services/dynamic-script-loader.service';
+import { ReconcilationService } from 'src/app/services/reconcilation.service';
+import { WorkflowService } from 'src/app/services/workflow.service';
 import Swal from 'sweetalert2';
 
-import { ManageSecurityService } from 'src/app/services/manage-security.service';
-import { MatCheckbox } from '@angular/material/checkbox';
 declare const $: any;
 
 @Component({
-  selector: 'app-left-panel',
-  templateUrl: './left-panel.component.html',
-  styleUrls: ['./left-panel.component.sass']
+  selector: 'app-workflow',
+  templateUrl: './workflow.component.html',
+  styleUrls: ['./workflow.component.sass']
 })
-export class LeftPanelComponent implements OnInit {
+export class WorkflowComponent implements OnInit {
 
   @ViewChild('roleTemplate', { static: true }) roleTemplate: TemplateRef<any>;
   
   register: FormGroup;
   hide = true;
   agree = false;
-  checked = false;
-  isChecked = false;
 
-  leftPanelData: any = [];
+  workFlowData: any = [];
+  companyData: any = [];
+  masterData: any = [];
+  levelData: any = [];
   BTN_VAL = 'Submit';
   submitted = false;
   APPLICATION_ID: string;
   SUB_APPLICATION_ID: string;
   CREATED_BY: string;
   tbl_columns = [
-    { name: 'Form Name' },
-    { name: 'Form Link' },
-    { name: 'Is Parent' },
-    { name: 'Is Child' },
-    { name: 'Is Sub Child' },
-    { name: 'Parent Code' },
-    { name: 'Child Code' },
-    { name: 'Sub Child Code' },
-    { name: 'Icon class' },
-    { name: 'Sequence Id' },
+    { name: 'Workflow_Name' },
+    { name: 'Workflow_Description' },
+    { name: 'Company_Ref_Id' },
+    { name: 'Entity_Ref_Id' },
+    { name: 'Workflow_Type_Ref_Id' },
+    { name: 'Level_Ref_Id' },
   ];
   tbl_data = [];
   tbl_FilteredData = [];
-
-  strValue1: String = 'Y';
-  strValue2: String = 'Y';
-  strValue3: String = 'Y';
   ngOnInit(): void {
     this.APPLICATION_ID = localStorage.getItem('APPLICATION_ID');
     this.SUB_APPLICATION_ID = localStorage.getItem('SUB_APPLICATION_ID');
@@ -62,16 +54,12 @@ export class LeftPanelComponent implements OnInit {
     $('#new_entry_form').hide();
     $('#new_entry_title').hide();
     this.register = this.fb.group({
-      form_name : ['',[Validators.required, Validators.pattern('[a-zA-Z]+')]],
-      form_link : [''],
-      is_parent : this.strValue1,
-      is_child : this.strValue2,
-      is_sub_child : this.strValue3,
-      parent_code : ['',[Validators.required, Validators.pattern('[a-zA-Z0-9]+')]],
-      child_code : [''],
-      sub_child_code : [''],
-      icon_class : [''],
-      sequence_id : ['',[Validators.required, Validators.pattern('[0-9]+')]],
+      workflow_name: [''],
+      workflow_description: [''],
+      company_ref_id: [''],
+      entity_ref_id: [''],
+      workflow_type_ref_id: [''],
+      level_ref_id: [''],
       termcondition: [false],
       sub_application_id: [this.SUB_APPLICATION_ID],
       application_id: [this.APPLICATION_ID],
@@ -79,12 +67,20 @@ export class LeftPanelComponent implements OnInit {
     });
   }
 
-
   @ViewChild(DatatableComponent, { static: false }) table: DatatableComponent;
 
-  constructor(private fb: FormBuilder,private manageSecurityService:ManageSecurityService,private commonSetupService: CommonSetupService,private reconcilationService: ReconcilationService,private dynamicScriptLoader: DynamicScriptLoaderService,private _snackBar: MatSnackBar) {
-    this.manageSecurityService.getLeftPanelData().subscribe((data: []) => {
-      this.leftPanelData = data;
+  constructor(private fb: FormBuilder,private workflowService: WorkflowService,private commonSetupService: CommonSetupService,private reconcilationService: ReconcilationService,private dynamicScriptLoader: DynamicScriptLoaderService,private _snackBar: MatSnackBar) {
+    this.workflowService.getWorkflowData().subscribe((data: []) => {
+      this.workFlowData = data;
+    });
+    this.workflowService.getLevelData().subscribe((data: []) => {
+      this.levelData = data;
+    });
+    this.workflowService.getCompanyData().subscribe((data: []) => {
+      this.companyData = data;
+    });
+    this.workflowService.getMasterData().subscribe((data: []) => {
+      this.masterData = data;
     });
     
   }
@@ -96,7 +92,7 @@ export class LeftPanelComponent implements OnInit {
       if (this.register.invalid) {
         return;
       } else {
-        this.manageSecurityService.saveLeftPanelData(this.register.value).subscribe((data: any) => {
+        this.workflowService.saveActivityData(this.register.value).subscribe((data: any) => {
         console.log("In save function ");
         console.log(data);
           if (data.status === 1) {
@@ -106,7 +102,7 @@ export class LeftPanelComponent implements OnInit {
               showConfirmButton: false,
               timer: 2000
             });
-            //this.ActivityData.push(data);
+            //this.workflowData.push(data);
           }
         
           if (data.status === 2) {
@@ -125,7 +121,7 @@ export class LeftPanelComponent implements OnInit {
               showConfirmButton: false
             });
           }
-          setTimeout(function(){location.href='http://localhost:4200/#/manage-security/left-panel'} , 2000);
+          setTimeout(function(){location.href='http://localhost:4200/#/workflow/workflow'} , 2000);
         },
           (error: any) => {
             // console.log("ERROR",error.error.split(" ")[0])
@@ -141,7 +137,7 @@ export class LeftPanelComponent implements OnInit {
             }catch(err){
               console.log(err)
             }
-            if(message.includes("form_name")){
+            if(message.includes("workflow_name")){
             // if (error.error.currency_code) {
               Swal.fire({
                 title: 'Location Name Already Exist!',
@@ -168,7 +164,7 @@ export class LeftPanelComponent implements OnInit {
     // get the key names of each column in the dataset
     const keys = Object.keys(this.tbl_FilteredData[0]);
     // assign filtered matches to the active datatable
-    this.leftPanelData = this.tbl_FilteredData.filter(function(item) {
+    this.workFlowData = this.tbl_FilteredData.filter(function(item) {
       // iterate through each row's column data
       for (let i = 0; i < colsAmt; i++) {
         // check for a match
@@ -229,18 +225,14 @@ export class LeftPanelComponent implements OnInit {
     this.submitted = false;
   }
 
-  editLeftPanelData(location) {
+  editWorkflowData(location) {
     this.register.patchValue({
-      form_name : location.form_name,
-      form_link : location.form_link,
-      is_parent : location.is_parent,
-      is_child : location.is_child,
-      is_sub_child : location.is_sub_child,
-      parent_code : location.parent_code,
-      child_code : location.child_code,
-      sub_child_code : location.sub_child,
-      icon_class : location.icon_class,
-      sequence_id : location.sequence_id,
+      workflow_name: location.workflow_name,
+      workflow_description: location.workflow_description,
+      company_ref_id: location.company_ref_id,
+      entity_ref_id: location.entity_ref_id,
+      workflow_type_ref_id: location.workflow_type_ref_id,
+      level_ref_id: location.level_ref_id,
       id: location.id,
     });
   
@@ -256,8 +248,8 @@ export class LeftPanelComponent implements OnInit {
       $('#list_title').hide();
     }
   }
-  deleteLeftPanelData(id){
-    this.manageSecurityService.deleteLeftPanelData(id).subscribe((data:any)=>{
+  deleteWorkflowData(id){
+    this.workflowService.deleteActivityData(id).subscribe((data:any)=>{
       if (data == 1) {
         Swal.fire({
           title: 'Your record has been deleted successfully!',
@@ -265,7 +257,7 @@ export class LeftPanelComponent implements OnInit {
           showConfirmButton: false
         });
     }
-  setTimeout(function(){location.href='http://localhost:4200/#/manage-security/left-panel'} , 2000);
+  setTimeout(function(){location.href='http://localhost:4200/#/workflow/workflow'} , 2000);
     });
     
   }

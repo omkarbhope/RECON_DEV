@@ -8,6 +8,7 @@ export const ROUTES: RouteInfo[] = [
                 path: '', title: 'Master', icon: '', class: 'ml-sub-menu', groupTitle: false, submenu: [
                     { path: '/workflow/activity', title: 'Activity', icon: '', class: '', groupTitle: false, submenu: [] },
                     { path: '/workflow/level', title: 'Level', icon: '', class: '', groupTitle: false, submenu: [] },
+                    { path: '/workflow/workflow', title: 'Workflow', icon: '', class: '', groupTitle: false, submenu: [] },
                 ]
             },
             {

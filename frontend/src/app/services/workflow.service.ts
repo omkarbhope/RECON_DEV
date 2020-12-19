@@ -15,12 +15,23 @@ export class WorkflowService {
     return this.http.get(this.baseUrl.concat('activity/'));
   }
 
+  getCompanyData() {
+    return this.http.get(this.baseUrl.concat('company/'));
+  }
+
+  getMasterData() {
+    return this.http.get(this.baseUrl.concat('master/'));
+  }
+
   getActionData() {
     return this.http.get(this.baseUrl.concat('action/'));
   }
 
   getLevelData() {
     return this.http.get(this.baseUrl.concat('level/'));
+  }
+  getWorkflowData() {
+    return this.http.get(this.baseUrl.concat('workflow/'));
   }
 
   saveActivityData(form) {
