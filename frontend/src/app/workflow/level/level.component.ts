@@ -8,6 +8,7 @@ import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import Swal from 'sweetalert2';
 
 import { WorkflowService } from 'src/app/services/workflow.service';
+import { GlobalConstants } from 'src/app/global/global-constants';
 declare const $: any;
 
 
@@ -19,6 +20,8 @@ declare const $: any;
 export class LevelComponent implements OnInit {
 
   @ViewChild('roleTemplate', { static: true }) roleTemplate: TemplateRef<any>;
+  
+  frontEndUrl = GlobalConstants.frontEndUrl;
   
   register: FormGroup;
   hide = true;
@@ -134,7 +137,9 @@ export class LevelComponent implements OnInit {
               showConfirmButton: false
             });
           }
-          setTimeout(function(){location.href='http://localhost:4200/#/workflow/level'} , 2000);
+          let exact_frontEndUrl = this.frontEndUrl + "/#/workflow/level";
+          setTimeout(function(){location.href= exact_frontEndUrl} , 2000);
+          //setTimeout(function(){location.href='http://localhost:4200/#/workflow/level'} , 2000);
         },
           (error: any) => {
             // console.log("ERROR",error.error.split(" ")[0])
@@ -256,7 +261,9 @@ export class LevelComponent implements OnInit {
           showConfirmButton: false
         });
     }
-  setTimeout(function(){location.href='http://localhost:4200/#/workflow/level'} , 2000);
+    let exact_frontEndUrl = this.frontEndUrl + "/#/workflow/level";
+    setTimeout(function(){location.href= exact_frontEndUrl} , 2000);
+    //setTimeout(function(){location.href='http://localhost:4200/#/workflow/level'} , 2000);
     });
     
   }   /////// Delete function remaining from define api hub

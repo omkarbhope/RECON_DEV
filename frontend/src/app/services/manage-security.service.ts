@@ -2,13 +2,15 @@ import { map, catchError } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http'
 import { Observable, throwError } from 'rxjs'
+import { GlobalConstants } from '../global/global-constants';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ManageSecurityService {
 
-  private baseUrl = "http://127.0.0.1:8000/";
+  //private baseUrl = "http://127.0.0.1:8000/";
+  private baseUrl = GlobalConstants.baseUrl;
 
   constructor(private http: HttpClient) { }
 

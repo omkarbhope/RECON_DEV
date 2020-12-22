@@ -174,6 +174,73 @@
                 </div>
             </div>
         </div> 
+        <div id="body2">
+            <div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="body">
+                            <div class="table-responsive" formArrayName="initialItemRow">
+                                <table id="tableExport"
+                                    class="display table table-hover table-checkable order-column m-t-20 width-per-100 table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th style="text-align:center">Action</th>
+                                            <th style="text-align:center">Level</th>
+                                            <th style="text-align:center">Screen Name</th>
+                                            <th style="text-align:center">Field Name</th>
+                                            <th style="text-align:center">Currency ID</th>
+                                            <th style="text-align:center">Approval Amount</th>
+                                            <th style="text-align:center">Is Approval Required</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="main_tbody">
+                                        <tr *ngFor="let dynamic of register.controls.initialItemRow['controls']; let i = index" [formGroupName]="i">
+
+                                            <td>
+                                                <ng-container *ngIf="i==0">
+                                            <td>
+                                                <button type="button" class="btn btn-primary btn-rounded waves-effect" (click)="addNewRow()">+</button>
+                                            </td>
+                                            </ng-container>
+                                            <ng-container *ngIf="i>0">
+                                                <td>
+                                                    <button type="button" class="btn btn-danger btn-rounded waves-effect"(click)="deleteRow(i)">-</button>
+                                                </td>
+                                            </ng-container>
+                                            </td>
+
+                                            <td class="col_input">
+                                                <select class="form-control" id="level{{i+1}}" formControlName="level">
+                                                    <option value="">Level</option>
+                                                    <option [value]="data.id" *ngFor="let data of levelData">{{data.level}}</option>
+                                                </select>
+                                            </td>
+
+                                            <td class="col_input">
+                                                <input class="form-control" type="text" id="sequence_number{{i+1}}" formControlName="sequence_number">
+                                            </td>
+
+                                            <td class="col_input">
+                                                <select class="form-control" id="action_ref_id{{i+1}}" formControlName="action_ref_id">
+                                                    <option value="">Action</option>
+                                                    <option [value]="data.id" *ngFor="let data of actionData">{{data.action_name}}</option>
+                                                </select>
+                                            </td>
+
+                                            <td class="col_input">
+                                                <input class="form-control" type="text" id="next_sequence_number{{i+1}}" formControlName="next_sequence_number">
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div id="list_form">
             <div class="row clearfix">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">

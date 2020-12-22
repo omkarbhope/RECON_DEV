@@ -1,7 +1,8 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
+import { GlobalConstants } from 'src/app/global/global-constants';
 import { CommonSetupService } from 'src/app/services/common-setup.service';
 import { DynamicScriptLoaderService } from 'src/app/services/dynamic-script-loader.service';
 import { ReconcilationService } from 'src/app/services/reconcilation.service';
@@ -18,6 +19,8 @@ declare const $: any;
 export class WorkflowComponent implements OnInit {
 
   @ViewChild('roleTemplate', { static: true }) roleTemplate: TemplateRef<any>;
+  
+  frontEndUrl = GlobalConstants.frontEndUrl;
   
   register: FormGroup;
   hide = true;
@@ -64,7 +67,38 @@ export class WorkflowComponent implements OnInit {
       sub_application_id: [this.SUB_APPLICATION_ID],
       application_id: [this.APPLICATION_ID],
       created_by: [this.CREATED_BY],
+      initialItemRow: this.fb.array([this.initialitemRow()])
     });
+  }
+  initialitemRow() {
+    return this.fb.group({
+      id: [''],
+      level: ['', Validators.required],
+      screen_name: ['', [Validators.required,Validators.pattern('[0-9]+')]],
+      field_name: ['', Validators.required],
+      currency_id: ['', [Validators.required,Validators.pattern('[0-9]+')]],
+      approval_amount: ['', [Validators.required,Validators.pattern('[0-9]+')]],
+      is_approval_required: [''],
+      sub_application_id: [this.SUB_APPLICATION_ID],
+      application_id: [this.APPLICATION_ID],
+    });
+  }
+
+  get formArr() {
+    return this.register.get('initialItemRow') as FormArray;
+  }
+
+  addNewRow() {
+    this.formArr.push(this.initialitemRow());
+  }
+
+  deleteRow(index) {
+    if (this.formArr.length == 1) {
+      return false;
+    } else {
+      this.formArr.removeAt(index);
+      return true;
+    }
   }
 
   @ViewChild(DatatableComponent, { static: false }) table: DatatableComponent;
@@ -121,7 +155,9 @@ export class WorkflowComponent implements OnInit {
               showConfirmButton: false
             });
           }
-          setTimeout(function(){location.href='http://localhost:4200/#/workflow/workflow'} , 2000);
+          let exact_frontEndUrl = this.frontEndUrl + "/#/workflow/workflow";
+          setTimeout(function(){location.href= exact_frontEndUrl} , 2000);
+          //setTimeout(function(){location.href='http://localhost:4200/#/workflow/workflow'} , 2000);
         },
           (error: any) => {
             // console.log("ERROR",error.error.split(" ")[0])
@@ -257,7 +293,9 @@ export class WorkflowComponent implements OnInit {
           showConfirmButton: false
         });
     }
-  setTimeout(function(){location.href='http://localhost:4200/#/workflow/workflow'} , 2000);
+    let exact_frontEndUrl = this.frontEndUrl + "/#/workflow/workflow";
+    setTimeout(function(){location.href= exact_frontEndUrl} , 2000);
+    //setTimeout(function(){location.href='http://localhost:4200/#/workflow/workflow'} , 2000);
     });
     
   }

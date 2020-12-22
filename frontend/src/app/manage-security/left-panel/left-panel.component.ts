@@ -9,6 +9,7 @@ import Swal from 'sweetalert2';
 
 import { ManageSecurityService } from 'src/app/services/manage-security.service';
 import { MatCheckbox } from '@angular/material/checkbox';
+import { GlobalConstants } from 'src/app/global/global-constants';
 declare const $: any;
 
 @Component({
@@ -19,6 +20,8 @@ declare const $: any;
 export class LeftPanelComponent implements OnInit {
 
   @ViewChild('roleTemplate', { static: true }) roleTemplate: TemplateRef<any>;
+
+  frontEndUrl = GlobalConstants.frontEndUrl;
   
   register: FormGroup;
   hide = true;
@@ -125,7 +128,9 @@ export class LeftPanelComponent implements OnInit {
               showConfirmButton: false
             });
           }
-          setTimeout(function(){location.href='http://localhost:4200/#/manage-security/left-panel'} , 2000);
+          let exact_frontEndUrl = this.frontEndUrl + "/#/manage-security/left-panel";
+          setTimeout(function(){location.href= exact_frontEndUrl} , 2000);
+          //setTimeout(function(){location.href='http://localhost:4200/#/manage-security/left-panel'} , 2000);
         },
           (error: any) => {
             // console.log("ERROR",error.error.split(" ")[0])
@@ -265,7 +270,9 @@ export class LeftPanelComponent implements OnInit {
           showConfirmButton: false
         });
     }
-  setTimeout(function(){location.href='http://localhost:4200/#/manage-security/left-panel'} , 2000);
+    let exact_frontEndUrl = this.frontEndUrl + "/#/manage-security/left-panel";
+    setTimeout(function(){location.href= exact_frontEndUrl} , 2000); 
+    //setTimeout(function(){location.href='http://localhost:4200/#/manage-security/left-panel'} , 2000);
     });
     
   }
