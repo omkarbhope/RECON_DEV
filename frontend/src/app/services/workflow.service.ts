@@ -35,7 +35,12 @@ export class WorkflowService {
   getWorkflowData() {
     return this.http.get(this.baseUrl.concat('workflow/'));
   }
-
+  getScreenData() {
+    return this.http.get(this.baseUrl.concat('screen-link/'));
+  }
+  getAllLevelData(level_id){
+    return this.http.get(this.baseUrl.concat(`level/${level_id}/`));
+  }
   saveActivityData(form) {
     if(form.id)
     {

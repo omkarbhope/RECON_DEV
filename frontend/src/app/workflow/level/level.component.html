@@ -59,16 +59,57 @@
 
                                     <input type="hidden" formControlName="id" id="id" [value]="" class="form-control">
 
+                                        <div class="row">
+                                            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                                <mat-form-field class="col-xl" appearance="outline">
+                                                    <mat-label> Level </mat-label>
+                                                    <input matInput formControlName="level" required>
+                                                    <mat-icon matSuffix>face</mat-icon>
+                                                    <mat-error *ngIf="register.get('level').hasError('required')">
+                                                        Level is required
+                                                    </mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                                <mat-form-field class="col-xl" appearance="outline">
+                                                    <mat-label>Entity Name</mat-label>
+                                                    <input matInput formControlName="entity_ref_id">
+                                                    <mat-icon matSuffix>face</mat-icon>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                                <mat-form-field class="col-xl" appearance="outline">
+                                                    <mat-label>Company</mat-label>
+                                                    <mat-select formControlName="company_ref_id" required>
+                                                        <mat-option [value]="">
+                                                            Select Company
+                                                        </mat-option>
+                                                        <mat-option [value]="data.id" *ngFor="let data of companyData">
+                                                            {{data.company_name}}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                    <mat-icon matSuffix>flag</mat-icon>
                                     
-                                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
-                                            <mat-form-field class="col-xl" appearance="outline">
-                                                <mat-label> Level </mat-label>
-                                                <input matInput formControlName="level" required>
-                                                <mat-icon matSuffix>face</mat-icon>
-                                                <mat-error *ngIf="register.get('level').hasError('required')">
-                                                    Level is required
-                                                </mat-error>
-                                            </mat-form-field>
+                                                </mat-form-field>
+                                            </div>
+                                            
+                                            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                                <mat-form-field class="col-xl" appearance="outline">
+                                                    <mat-label>Workflow Type</mat-label>
+                                                    <mat-select formControlName="workflow_type_ref_id" required>
+                                                        <mat-option [value]="">
+                                                            Select Workflow Type
+                                                        </mat-option>
+                                                        <mat-option [value]="data.id" *ngFor="let data of masterData">
+                                                            {{data.master_type}}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                    <mat-icon matSuffix>flag</mat-icon>
+                                    
+                                                </mat-form-field>
+                                            </div>
                                         </div>
                                         
                                     
@@ -145,12 +186,13 @@
 
                             </div>
                         </div>
+                        
 
                         <div class="card">
                             <div class="body" style="text-align: center;">
                                 <div class="button-demo">
                                     <button type="submit"
-                                        class="btn btn-primary btn-border-radius waves-effect">{{BTN_VAL}}</button>
+                                        class="btn btn-primary btn-border-radius waves-effect" [disabled]="!register.valid">{{BTN_VAL}}</button>
                                     <button type="button" (click)="showList()" class="btn btn-danger btn-border-radius waves-effect">Cancel</button>
                                 </div>
                             </div>

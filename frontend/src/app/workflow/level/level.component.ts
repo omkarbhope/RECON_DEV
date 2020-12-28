@@ -29,6 +29,8 @@ export class LevelComponent implements OnInit {
 
   levelData: any = [];
   activityData: any = [];
+  masterData: any = [];
+  companyData: any = [];
   actionData: any = [];
   BTN_VAL = 'Submit';
   submitted = false;
@@ -48,6 +50,9 @@ export class LevelComponent implements OnInit {
     $('#new_entry_form').hide();
     $('#new_entry_title').hide();
     this.register = this.fb.group({
+      company_ref_id: [''],
+      entity_ref_id: [''],
+      workflow_type_ref_id: [''],
       level: ['', [Validators.required, Validators.pattern('[0-9]+')]],
       termcondition: [false],
       sub_application_id: [this.SUB_APPLICATION_ID],
@@ -97,6 +102,12 @@ export class LevelComponent implements OnInit {
     });
     this.workflowService.getActionData().subscribe((data: []) => {
       this.actionData = data;
+    });
+    this.workflowService.getCompanyData().subscribe((data: []) => {
+      this.companyData = data;
+    });
+    this.workflowService.getMasterData().subscribe((data: []) => {
+      this.masterData = data;
     });
     
   }
@@ -234,6 +245,9 @@ export class LevelComponent implements OnInit {
 
   editLevelData(location) {
     this.register.patchValue({
+      company_ref_id: location.company_ref_id,
+      entity_ref_id: location.entity_ref_id,
+      workflow_type_ref_id: location.workflow_type_ref_id,
       level: location.level,
       id: location.id,
       initialItemRow: location.initialItemRow,

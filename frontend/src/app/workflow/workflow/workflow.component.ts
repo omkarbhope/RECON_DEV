@@ -23,13 +23,19 @@ export class WorkflowComponent implements OnInit {
   frontEndUrl = GlobalConstants.frontEndUrl;
   
   register: FormGroup;
+  register2: FormGroup;
+  register3: FormGroup;
   hide = true;
   agree = false;
 
   workFlowData: any = [];
+  activityData: any = [];
+  actionData: any = [];
   companyData: any = [];
   masterData: any = [];
   levelData: any = [];
+  myLevelData: any = [];
+  screenData: any = [];
   BTN_VAL = 'Submit';
   submitted = false;
   APPLICATION_ID: string;
@@ -55,6 +61,8 @@ export class WorkflowComponent implements OnInit {
     $('#btn_new_entry').show();
     $('#btn_list').hide();
     $('#new_entry_form').hide();
+    $('#new_entry_form_2').hide();
+    $('#new_entry_form_3').hide();
     $('#new_entry_title').hide();
     this.register = this.fb.group({
       workflow_name: [''],
@@ -67,14 +75,59 @@ export class WorkflowComponent implements OnInit {
       sub_application_id: [this.SUB_APPLICATION_ID],
       application_id: [this.APPLICATION_ID],
       created_by: [this.CREATED_BY],
+    });
+
+    this.register2 = this.fb.group({
+      screen_name: [''],
+      field_name: [''],
+      level_ref_id: [''],
+      termcondition: [false],
+      sub_application_id: [this.SUB_APPLICATION_ID],
+      application_id: [this.APPLICATION_ID],
+      created_by: [this.CREATED_BY],
       initialItemRow: this.fb.array([this.initialitemRow()])
     });
+    this.register3 = this.fb.group({
+      termcondition: [false],
+      sub_application_id: [this.SUB_APPLICATION_ID],
+      application_id: [this.APPLICATION_ID],
+      created_by: [this.CREATED_BY],
+      initialItemRow2: this.fb.array([this.initialitemRow2()])
+    });
+    this.register2.get('level_ref_id').valueChanges.subscribe(val => {
+      if (val != null) {
+        this.myLevelData = [];
+        var level = [];
+        console.log(val);
+        this.workflowService.getAllLevelData(val).subscribe((data: []) => {
+          level = data['initialItemRow'];
+          this.myLevelData = level;
+          console.log(this.myLevelData);
+        })
+      }
+      // else if(val != 16)
+      // {
+      //   this.myLevelData = [];
+      //   var level = [];
+      //   var levelArray = [];
+      //   for(let i=16;i<=val;i++)
+      //   { 
+      //     console.log(i);
+      //     this.workflowService.getAllLevelData(i).subscribe((data: []) => {
+      //       level.push(data['initialItemRow']);
+      //     })
+      //   }
+      //   this.myLevelData = level;
+      //   console.log(this.myLevelData);
+      // }
+      
+    })
   }
   initialitemRow() {
     return this.fb.group({
       id: [''],
       level: ['', Validators.required],
-      screen_name: ['', [Validators.required,Validators.pattern('[0-9]+')]],
+      screen_name: ['', Validators.required,],
       field_name: ['', Validators.required],
       currency_id: ['', [Validators.required,Validators.pattern('[0-9]+')]],
       approval_amount: ['', [Validators.required,Validators.pattern('[0-9]+')]],
@@ -83,9 +136,24 @@ export class WorkflowComponent implements OnInit {
       application_id: [this.APPLICATION_ID],
     });
   }
-
+  initialitemRow2() {
+    return this.fb.group({
+      id: [''],
+      is_email_required :[''],
+      is_whatsapp_required :[''],
+      is_sms_required :[''],
+      is_reminder_required :[''],
+      is_worklist_required :[''],
+      activity_ref_id: ['', Validators.required],
+      sequence_number: ['', [Validators.required,Validators.pattern('[0-9]+')]],
+      action_ref_id: ['', Validators.required],
+      next_sequence_number: ['', [Validators.required,Validators.pattern('[0-9]+')]],
+      sub_application_id: [this.SUB_APPLICATION_ID],
+      application_id: [this.APPLICATION_ID],
+    });
+  }
   get formArr() {
-    return this.register.get('initialItemRow') as FormArray;
+    return this.register2.get('initialItemRow') as FormArray;
   }
 
   addNewRow() {
@@ -116,6 +184,16 @@ export class WorkflowComponent implements OnInit {
     this.workflowService.getMasterData().subscribe((data: []) => {
       this.masterData = data;
     });
+    this.workflowService.getScreenData().subscribe((data: []) => {
+      this.screenData = data;
+    });
+    this.workflowService.getActivityData().subscribe((data: []) => {
+      this.activityData = data;
+    });
+    this.workflowService.getActionData().subscribe((data: []) => {
+      this.actionData = data;
+    });
+    
     
   }
   
@@ -192,6 +270,152 @@ export class WorkflowComponent implements OnInit {
       }
   }
 
+  onRegister2() {
+    console.log('Form Value', this.register2.value);
+    this.submitted = true;
+  
+      if (this.register2.invalid) {
+        return;
+      } else {
+        this.workflowService.saveActivityData(this.register2.value).subscribe((data: any) => {
+        console.log("In save function ");
+        console.log(data);
+          if (data.status === 1) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Your record has been added successfully!',
+              showConfirmButton: false,
+              timer: 2000
+            });
+            //this.workflowData.push(data);
+          }
+        
+          if (data.status === 2) {
+            Swal.fire({
+              title: 'Your record has been updated successfully!',
+              icon: 'success',
+              timer: 2000,
+              showConfirmButton: false
+            });
+          }
+          if (data == 0) {
+            Swal.fire({
+              title: 'Record Already Exist!',
+              icon: 'warning',
+              timer: 2000,
+              showConfirmButton: false
+            });
+          }
+          let exact_frontEndUrl = this.frontEndUrl + "/#/workflow/workflow";
+          setTimeout(function(){location.href= exact_frontEndUrl} , 2000);
+          //setTimeout(function(){location.href='http://localhost:4200/#/workflow/workflow'} , 2000);
+        },
+          (error: any) => {
+            // console.log("ERROR",error.error.split(" ")[0])
+            console.log("ERRRRROR", error)
+            console.log("sub_application_id:",this.register2)
+  
+            //Error Meassage
+            let message=""
+            try
+            {
+              //Get the error message from exception thrown by the django
+              message=error.error.substring(1,100) 
+            }catch(err){
+              console.log(err)
+            }
+            if(message.includes("workflow_name")){
+            // if (error.error.currency_code) {
+              Swal.fire({
+                title: 'Location Name Already Exist!',
+                icon: 'warning',
+                showConfirmButton: false
+              });
+            }
+            else{
+              Swal.fire({
+                title: "Server Error",
+                icon: 'warning',
+                showConfirmButton: false
+              });
+            }
+          });
+      }
+  }
+
+  onRegister3() {
+    console.log('Form Value', this.register3.value);
+    this.submitted = true;
+  
+      if (this.register3.invalid) {
+        return;
+      } else {
+        this.workflowService.saveActivityData(this.register3.value).subscribe((data: any) => {
+        console.log("In save function ");
+        console.log(data);
+          if (data.status === 1) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Your record has been added successfully!',
+              showConfirmButton: false,
+              timer: 2000
+            });
+            //this.workflowData.push(data);
+          }
+        
+          if (data.status === 2) {
+            Swal.fire({
+              title: 'Your record has been updated successfully!',
+              icon: 'success',
+              timer: 2000,
+              showConfirmButton: false
+            });
+          }
+          if (data == 0) {
+            Swal.fire({
+              title: 'Record Already Exist!',
+              icon: 'warning',
+              timer: 2000,
+              showConfirmButton: false
+            });
+          }
+          let exact_frontEndUrl = this.frontEndUrl + "/#/workflow/workflow";
+          setTimeout(function(){location.href= exact_frontEndUrl} , 2000);
+          //setTimeout(function(){location.href='http://localhost:4200/#/workflow/workflow'} , 2000);
+        },
+          (error: any) => {
+            // console.log("ERROR",error.error.split(" ")[0])
+            console.log("ERRRRROR", error)
+            console.log("sub_application_id:",this.register3)
+  
+            //Error Meassage
+            let message=""
+            try
+            {
+              //Get the error message from exception thrown by the django
+              message=error.error.substring(1,100) 
+            }catch(err){
+              console.log(err)
+            }
+            if(message.includes("workflow_name")){
+            // if (error.error.currency_code) {
+              Swal.fire({
+                title: 'Location Name Already Exist!',
+                icon: 'warning',
+                showConfirmButton: false
+              });
+            }
+            else{
+              Swal.fire({
+                title: "Server Error",
+                icon: 'warning',
+                showConfirmButton: false
+              });
+            }
+          });
+      }
+  }
+
   tbl_FilterDatatable(event) {
     // get the value of the key pressed and make it lowercase
     const val = event.target.value.toLowerCase();
@@ -238,6 +462,8 @@ export class WorkflowComponent implements OnInit {
     });
 
     $('#new_entry_form').hide();
+    $('#new_entry_form_2').hide();
+    $('#new_entry_form_3').hide();
     $('#new_entry_title').hide();
     $('#btn_list').hide();
   }
@@ -247,6 +473,8 @@ export class WorkflowComponent implements OnInit {
     $('#btn_new_entry').hide();
     $('#btn_list').show();
     $('#new_entry_form').show();
+    $('#new_entry_form_2').show();
+    $('#new_entry_form_3').show();
     $('#new_entry_title').show();
     this.BTN_VAL = 'Submit';
   }
@@ -257,6 +485,8 @@ export class WorkflowComponent implements OnInit {
     $('#btn_new_entry').show();
     $('#btn_list').hide();
     $('#new_entry_form').hide();
+    $('#new_entry_form_2').hide();
+    $('#new_entry_form_3').hide();
     $('#new_entry_title').hide();
     this.submitted = false;
   }
@@ -277,6 +507,8 @@ export class WorkflowComponent implements OnInit {
   
     if (id !== '') {
       $('#new_entry_form').show();
+      $('#new_entry_form_2').show();
+      $('#new_entry_form_3').show();
       $('#new_entry_title').show();
       $('#btn_list').hide();
       $('#btn_new_entry').hide();

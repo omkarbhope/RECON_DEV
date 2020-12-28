@@ -236,3 +236,9 @@ class WorkflowSerializer(serializers.ModelSerializer):
     class Meta:
         model = tbl_workflow_mst
         fields = ('__all__')
+
+class ScreenLinkingSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False)
+    class Meta:
+        model = tbl_workflow_screen_linking_mst
+        fields = ('__all__')

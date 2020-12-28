@@ -105,3 +105,7 @@ class ActionViewSet(viewsets.ModelViewSet):
 class WorkflowViewSet(viewsets.ModelViewSet):
     serializer_class = WorkflowSerializer
     queryset = tbl_workflow_mst.objects.all()
+
+class ScreenLinkingViewSet(viewsets.ModelViewSet):
+    serializer_class = ScreenLinkingSerializer
+    queryset = tbl_workflow_screen_linking_mst.objects.all()
