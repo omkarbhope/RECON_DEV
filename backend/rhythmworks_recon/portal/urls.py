@@ -26,6 +26,7 @@ router.register(r'level-details', views.LevelDetailsViewSet)
 router.register(r'action', views.ActionViewSet)
 router.register(r'workflow', views.WorkflowViewSet)
 router.register(r'screen-link', views.ScreenLinkingViewSet)
+router.register(r'currency', views.CurrencyViewSet)
 
 urlpatterns = [
     path('auth/code/', obtain_code_token),

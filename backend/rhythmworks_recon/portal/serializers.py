@@ -242,3 +242,10 @@ class ScreenLinkingSerializer(serializers.ModelSerializer):
     class Meta:
         model = tbl_workflow_screen_linking_mst
         fields = ('__all__')
+
+class CurrencySerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False)
+    # country_name = serializers.CharField(source='country_id.name',read_only=True)
+    class Meta:
+        model = Tbl_Currency_Mst
+        fields = ('__all__')

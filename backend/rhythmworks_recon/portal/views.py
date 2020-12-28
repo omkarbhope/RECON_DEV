@@ -109,3 +109,19 @@ class WorkflowViewSet(viewsets.ModelViewSet):
 class ScreenLinkingViewSet(viewsets.ModelViewSet):
     serializer_class = ScreenLinkingSerializer
     queryset = tbl_workflow_screen_linking_mst.objects.all()
+
+class CurrencyViewSet(viewsets.ModelViewSet):
+    queryset = Tbl_Currency_Mst.objects.filter(is_deleted='N')
+    serializer_class = CurrencySerializer
+    # filter_backends = [DjangoFilterBackend]
+    filter_fields = ['currency_code','is_deleted']
+
+    def list(self, request, country_id=None):
+        if country_id:
+            currency = Tbl_Currency_Mst.objects.filter(country_id = country_id, is_deleted='N')
+            serializer = self.get_serializer(currency, many=True)
+            return Response(serializer.data)
+        else:
+            currency = Tbl_Currency_Mst.objects.filter(is_deleted='N')
+            serializer = self.get_serializer(currency, many=True)
+            return Response(serializer.data)

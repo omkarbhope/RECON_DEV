@@ -29,6 +29,9 @@ export class WorkflowComponent implements OnInit {
   agree = false;
 
   workFlowData: any = [];
+  roleData: any = [];
+  employeeData: any = [];
+  currencyData: any = [];
   activityData: any = [];
   actionData: any = [];
   companyData: any = [];
@@ -144,6 +147,8 @@ export class WorkflowComponent implements OnInit {
       is_sms_required :[''],
       is_reminder_required :[''],
       is_worklist_required :[''],
+      role_ref_id :['', Validators.required],
+      employee_ref_id :['', Validators.required],
       activity_ref_id: ['', Validators.required],
       sequence_number: ['', [Validators.required,Validators.pattern('[0-9]+')]],
       action_ref_id: ['', Validators.required],
@@ -192,6 +197,15 @@ export class WorkflowComponent implements OnInit {
     });
     this.workflowService.getActionData().subscribe((data: []) => {
       this.actionData = data;
+    });
+    this.workflowService.getRoleData().subscribe((data: []) => {
+      this.roleData = data;
+    });
+    this.workflowService.getEmployeeData().subscribe((data: []) => {
+      this.employeeData = data;
+    });
+    this.workflowService.getCurrencyData().subscribe((data: []) => {
+      this.currencyData = data;
     });
     
     

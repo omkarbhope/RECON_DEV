@@ -212,21 +212,6 @@
                                                 <div class="row">
                                                     <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                                         <mat-form-field class="col-xl" appearance="outline">
-                                                            <mat-label>Screen</mat-label>
-                                                            <mat-select formControlName="screen_name" required>
-                                                                <mat-option [value]="">
-                                                                    Select Screen
-                                                                </mat-option>
-                                                                <mat-option [value]="data.id" *ngFor="let data of screenData">
-                                                                    {{data.label_field_name}}
-                                                                </mat-option>
-                                                            </mat-select>
-                                                            
-                                            
-                                                        </mat-form-field>
-                                                    </div>
-                                                    <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
-                                                        <mat-form-field class="col-xl" appearance="outline">
                                                             <mat-label>Level</mat-label>
                                                             <mat-select formControlName="level_ref_id" required>
                                                                 <mat-option [value]="">
@@ -240,6 +225,23 @@
                                             
                                                         </mat-form-field>
                                                     </div>
+                                                    
+                                                    <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                                        <mat-form-field class="col-xl" appearance="outline">
+                                                            <mat-label>Screen</mat-label>
+                                                            <mat-select formControlName="screen_name" required>
+                                                                <mat-option [value]="">
+                                                                    Select Screen
+                                                                </mat-option>
+                                                                <mat-option [value]="data.id" *ngFor="let data of screenData">
+                                                                    {{data.label_field_name}}
+                                                                </mat-option>
+                                                            </mat-select>
+                                                            
+                                            
+                                                        </mat-form-field>
+                                                    </div>
+                                                    
                                                     <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 mb-2">
                                                         <mat-form-field class="col-xl" appearance="outline">
                                                             <mat-label>Field</mat-label>
@@ -271,7 +273,7 @@
                                                                 <th style="text-align:center">Level</th>
                                                                 <th style="text-align:center">Screen Name</th>
                                                                 <th style="text-align:center">Field Name</th>
-                                                                <th style="text-align:center">Currency ID</th>
+                                                                <th style="text-align:center">Currency</th>
                                                                 <th style="text-align:center">Approval Amount</th>
                                                                 <th style="text-align:center">Is Approval Required</th>
                                                             </tr>
@@ -314,7 +316,10 @@
                                                                 </td>
                     
                                                                 <td class="col_input">
-                                                                    <input class="form-control" type="text" id="currency_id{{i+1}}" formControlName="currency_id">
+                                                                    <select class="form-control" id="currency_id{{i+1}}" formControlName="currency_id">
+                                                                        <option value="">Currency</option>
+                                                                        <option [value]="data.id" *ngFor="let data of currencyData">{{data.currency_code}}</option>
+                                                                    </select>
                                                                 </td>
                     
                                                                 <td class="col_input">
@@ -397,6 +402,8 @@
                                                         class="display table table-hover table-checkable order-column m-t-20 width-per-100 table-bordered">
                                                         <thead>
                                                             <tr>
+                                                                <th style="text-align:center">Role</th>
+                                                                <th style="text-align:center">Employee Name</th>
                                                                 <th style="text-align:center">Activity Name</th>
                                                                 <th style="text-align:center">Sequence Number</th>
                                                                 <th style="text-align:center">Action Name</th>
@@ -413,6 +420,18 @@
                                                         <tbody class="main_tbody">
                                                             <tr *ngFor="let myLevel of myLevelData; let i = index" [formGroupName]="i">
 
+                                                                <td class="col_input">
+                                                                    <select class="form-control" id="role_ref_id{{i+1}}" formControlName="role_ref_id">
+                                                                        <option value="">Role</option>
+                                                                        <option [value]="data.id" *ngFor="let data of roleData">{{data.role_name}}</option>
+                                                                    </select>
+                                                                </td>
+                                                                <td class="col_input">
+                                                                    <select class="form-control" id="employee_ref_id{{i+1}}" formControlName="employee_ref_id">
+                                                                        <option value="">Employee</option>
+                                                                        <option [value]="data.id" *ngFor="let data of employeeData">{{data.first_name}}</option>
+                                                                    </select>
+                                                                </td>
                                                                 <td class="col_input">
                                                                     <select class="form-control" id="activity_ref_id{{i+1}}" formControlName="activity_ref_id">
                                                                         <option value="">Activity</option>
@@ -437,23 +456,23 @@
                                                                 </td>
 
                                                                 <td class="col_input">
-                                                                    <mat-checkbox formControlName="is_email_required">Is Email Required</mat-checkbox>
+                                                                    <mat-checkbox formControlName="is_email_required"></mat-checkbox>
                                                                 </td>
 
                                                                 <td class="col_input">
-                                                                    <mat-checkbox formControlName="is_whatsapp_required">Is WhatsApp Required</mat-checkbox>
+                                                                    <mat-checkbox formControlName="is_whatsapp_required"></mat-checkbox>
                                                                 </td>
 
                                                                 <td class="col_input">
-                                                                    <mat-checkbox formControlName="is_sms_required">Is SMS Required</mat-checkbox>
+                                                                    <mat-checkbox formControlName="is_sms_required"></mat-checkbox>
                                                                 </td>
 
                                                                 <td class="col_input">
-                                                                    <mat-checkbox formControlName="is_reminder_required">Is Reminder Required</mat-checkbox>
+                                                                    <mat-checkbox formControlName="is_reminder_required"></mat-checkbox>
                                                                 </td>
 
                                                                 <td class="col_input">
-                                                                    <mat-checkbox formControlName="is_worklist_required">Is Worklist Required</mat-checkbox>
+                                                                    <mat-checkbox formControlName="is_worklist_required"></mat-checkbox>
                                                                 </td>
 
                                                             </tr>

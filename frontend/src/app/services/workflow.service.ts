@@ -32,6 +32,15 @@ export class WorkflowService {
   getLevelData() {
     return this.http.get(this.baseUrl.concat('level/'));
   }
+  getRoleData() {
+    return this.http.get(this.baseUrl.concat('role/'));
+  }
+  getEmployeeData() {
+    return this.http.get(this.baseUrl.concat('employee/'));
+  }
+  getCurrencyData() {
+    return this.http.get(this.baseUrl.concat('currency/'));
+  }
   getWorkflowData() {
     return this.http.get(this.baseUrl.concat('workflow/'));
   }
