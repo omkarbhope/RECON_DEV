@@ -98,7 +98,7 @@ export class WorkflowComponent implements OnInit {
       initialItemRow2: this.fb.array([this.initialitemRow2()])
     });
     this.register2.get('level_ref_id').valueChanges.subscribe(val => {
-      if (val != null) {
+      if (val != null && val== 16) {
         this.myLevelData = [];
         var level = [];
         console.log(val);
@@ -108,21 +108,25 @@ export class WorkflowComponent implements OnInit {
           console.log(this.myLevelData);
         })
       }
-      // else if(val != 16)
-      // {
-      //   this.myLevelData = [];
-      //   var level = [];
-      //   var levelArray = [];
-      //   for(let i=16;i<=val;i++)
-      //   { 
-      //     console.log(i);
-      //     this.workflowService.getAllLevelData(i).subscribe((data: []) => {
-      //       level.push(data['initialItemRow']);
-      //     })
-      //   }
-      //   this.myLevelData = level;
-      //   console.log(this.myLevelData);
-      // }
+      else if(val != 16)
+      {
+        this.myLevelData = [];
+        var level = [];
+        var levelArray = [];
+        for(let i=16;i<=val;i++)
+        { 
+          console.log(i);
+          this.workflowService.getAllLevelData(i).subscribe((data: []) => {
+            
+            for(let myLevel in data['initialItemRow'])
+            { 
+              level.push(myLevel);
+            }
+          })
+        }
+        this.myLevelData = level;
+        console.log(this.myLevelData);
+      }
       
     })
   }
